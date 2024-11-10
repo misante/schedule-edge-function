@@ -9,9 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.1.6",
+    "@mui/x-date-pickers": "^7.22.2",
+    "@sendgrid/mail": "^8.1.4",
+    "@supabase/supabase-js": "^2.46.1",
+    "date-fns": "^2.29.3",
+    "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
-    "next": "15.0.3"
+    "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
     "postcss": "^8",
