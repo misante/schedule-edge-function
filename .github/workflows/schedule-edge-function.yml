@@ -11,5 +11,5 @@ jobs:
     steps:
       - name: Call Supabase Edge Function
         run: |
-          curl -X POST https://https://hpgoclpdbikadgcbrdtr.supabase.co/functions/v1/check-expiring-documents \
-          -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwZ29jbHBkYmlrYWRnY2JyZHRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzExMzYzNDgsImV4cCI6MjA0NjcxMjM0OH0.WFUJPJhMy8NORXHFXYwfxmCTe_v48D8dfEL-XEsmP54"
+          curl -X POST ${{ secrets.SUPABASE_URL }}/functions/v1/check-expiring-documents \
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
