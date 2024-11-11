@@ -1,9 +1,9 @@
 name: Schedule Edge Function
 
 on:
-  workflow_dispatch: # Allows manual triggering of the workflow for testing
+  workflow_dispatch: # Allow manual triggering for testing
   schedule:
-    - cron: "0 0 * * *" # Runs every day at midnight UTC
+    - cron: "0 0 * * *" # Every day at midnight UTC
 
 jobs:
   trigger-function:
@@ -11,6 +11,6 @@ jobs:
     steps:
       - name: Call Supabase Edge Function
         run: |
-          curl -X POST "${{ secrets.SUPABASE_URL }}/functions/v1/check-expiring-documents" 
-          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" 
+          curl -X POST "${{ secrets.SUPABASE_URL }}/functions/v1/check-expiring-documents" \
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
           -H "Content-Type: application/json"
