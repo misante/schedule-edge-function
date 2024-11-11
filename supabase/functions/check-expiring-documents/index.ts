@@ -1,41 +1,33 @@
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
 
-// Setup type definitions for built-in Supabase Runtime APIs
-// import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-
-// console.log("Hello from Functions!");
-
-// Deno.serve(async (req) => {
-//   const { name } = await req.json();
-//   const data = {
-//     message: `Hello ${name}!`,
-//   };
-
-//   return new Response(JSON.stringify(data), {
-//     headers: { "Content-Type": "application/json" },
-//   });
-// });
-
-/* To invoke locally:
-
-  1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
-  2. Make an HTTP request:
-
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/check-expiring-documents' \
-    --header 'Authorization: Bearer ' \
-    --header 'Content-Type: application/json' \
-    --data '{"name":"Functions"}'
-
-*/
-// File: ./functions/check-expiring-documents/index.ts
 import { serve } from 'https://deno.land/x/sift/mod.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import sgMail from "@sendgrid/mail";
 
 const supabaseUrl = Deno.env.get('NEXT_PUBLIC_SUPABASE_URL')!;
 const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const supabase = createClient(supabaseUrl, supabaseKey);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+
+
+const sendReminder = (doc) => {
+  const msg = {
+    to: "aspireonline22@gmail.com", // Recipient's email
+    from: "aspireonline22@gmail.com", // Your verified sender email
+    subject: `Document "${doc.name}" is Expiring Soon`,
+    text: `Your document "${doc.name}" is expiring on ${doc.expiration_date}. Please renew it.`,
+    html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+  };
+
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log("Reminder sent for:", doc.name);
+    })
+    .catch((error) => {
+      console.error("Error sending reminder:", error);
+    });
+};
 
 // Serve the Edge Function
 serve(async (req) => {
@@ -62,8 +54,10 @@ serve(async (req) => {
       // E.g., send notifications or log the results
       console.log('Documents nearing expiration:', expiringDocuments);
       
-      // You can add notification logic here (email, SMS, etc.)
-      
+      // Loop through each document and send reminder
+    for (const doc of expiringDocuments) {
+      sendReminder(doc);
+    }
       return new Response(
         JSON.stringify({ message: `Found ${expiringDocuments.length} expiring documents`, data: expiringDocuments }),
         { status: 200 }

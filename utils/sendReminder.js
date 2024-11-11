@@ -4,8 +4,8 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const sendReminder = (doc) => {
   const msg = {
-    to: "recipient@example.com", // Recipient's email
-    from: "noreply@yourapp.com", // Your verified sender email
+    to: "aspireonline22@gmail.com", // Recipient's email
+    from: "aspireonline22@gmail.com", // Your verified sender email
     subject: `Document "${doc.name}" is Expiring Soon`,
     text: `Your document "${doc.name}" is expiring on ${doc.expiration_date}. Please renew it.`,
     html: "<strong>and easy to do anywhere, even with Node.js</strong>",
