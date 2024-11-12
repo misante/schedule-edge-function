@@ -33,7 +33,7 @@ const sendReminder = (doc) => {
 };
 
 // Serve the Edge Function
-serve(async (req) => {
+serve(async () => {
   try {
     // Get current date and date after 7 days
     const today = new Date().toISOString().split('T')[0];
@@ -49,6 +49,7 @@ serve(async (req) => {
       .lte('expiration_date', nextWeek);
 
     if (error) {
+      console.log(error.message)
       return new Response(JSON.stringify({ error: error.message }), { status: 500 });
     }
     if (expiringDocuments && expiringDocuments.length > 0) {
