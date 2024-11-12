@@ -33,7 +33,7 @@ const sendReminder = (doc) => {
 };
 
 // Serve the Edge Function
-serve(async () => {
+serve(async (req) => {
   try {
     // Get current date and date after 7 days
     const today = new Date().toISOString().split('T')[0];
