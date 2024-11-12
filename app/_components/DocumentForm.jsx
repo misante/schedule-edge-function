@@ -65,63 +65,70 @@ const DocumentForm = () => {
   };
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit}
-      sx={{ maxWidth: "400px", margin: "auto", padding: "20px" }}
-    >
-      <Typography
-        variant="h5"
-        color="primary"
-        font="bold"
-        sx={{
-          marginBottom: "32px",
-          textAlign: "center",
-          fontFamily: "serif",
-          // backgroundColor: "red",
-        }}
+    <>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ maxWidth: "400px", margin: "auto", padding: "20px" }}
       >
-        Add New Document
-      </Typography>
-
-      <TextField
-        fullWidth
-        label="Document Name"
-        name="name"
-        value={formValues.name}
-        onChange={handleChange}
-        required
-        sx={{ marginBottom: "20px" }}
-      />
-
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <DatePicker
-          label="Expiration Date"
-          value={formValues.expiration_date}
-          onChange={handleDateChange}
-          slots={{
-            textField: (params) => <TextField {...params} fullWidth required />,
+        <Typography
+          variant="h5"
+          color="primary"
+          font="bold"
+          sx={{
+            marginBottom: "32px",
+            textAlign: "center",
+            fontFamily: "serif",
+            // backgroundColor: "red",
           }}
-        />
-      </LocalizationProvider>
-
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        fullWidth
-        sx={{ marginTop: "20px" }}
-        disabled={loading}
-      >
-        {loading ? "Submitting..." : "Submit Document"}
-      </Button>
-
-      {message && (
-        <Typography variant="body1" sx={{ marginTop: "20px", color: "green" }}>
-          {message}
+        >
+          Add New Document
         </Typography>
-      )}
-    </Box>
+
+        <TextField
+          fullWidth
+          label="Document Name"
+          name="name"
+          value={formValues.name}
+          onChange={handleChange}
+          required
+          sx={{ marginBottom: "20px" }}
+        />
+
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DatePicker
+            label="Expiration Date"
+            value={formValues.expiration_date}
+            onChange={handleDateChange}
+            slots={{
+              textField: (params) => (
+                <TextField {...params} fullWidth required />
+              ),
+            }}
+          />
+        </LocalizationProvider>
+
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          sx={{ marginTop: "20px" }}
+          disabled={loading}
+        >
+          {loading ? "Submitting..." : "Submit Document"}
+        </Button>
+
+        {message && (
+          <Typography
+            variant="body1"
+            sx={{ marginTop: "20px", color: "green" }}
+          >
+            {message}
+          </Typography>
+        )}
+      </Box>
+    </>
   );
 };
 

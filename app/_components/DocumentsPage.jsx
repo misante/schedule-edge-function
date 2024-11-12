@@ -110,6 +110,7 @@ import {
   Box,
   Grid,
 } from "@mui/material";
+import toast from "react-hot-toast";
 
 export default function DocumentsPage() {
   const [documents, setDocuments] = useState([]);
@@ -139,6 +140,17 @@ export default function DocumentsPage() {
 
   const handleCreateNewDocument = () => {
     router.push("/create-document");
+  };
+  const sendEmail = async () => {
+    const message = { name: "Ashenafi EID", expiration_date: "10 Dec 2024" };
+    const resp = await fetch("/api/send-reminder", {
+      method: "POST",
+      body: JSON.stringify(message),
+      headers: { "Content-Type": "application/json" },
+    });
+    if (resp) {
+      toast.success("email sent");
+    }
   };
 
   return (
@@ -192,6 +204,14 @@ export default function DocumentsPage() {
           </Table>
         </TableContainer>
       )}
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={sendEmail}
+        sx={{ marginBottom: 2 }}
+      >
+        Send Email
+      </Button>
     </Box>
   );
 }

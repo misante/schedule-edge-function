@@ -1,11 +1,11 @@
 import { serve } from 'https://deno.land/x/sift/mod.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import sgMail from 'https://esm.sh/@sendgrid/mail@7'; // Use the correct SendGrid library URL
+import sgMail from 'https://esm.sh/@sendgrid/mail@7';
 
 // Initialize Supabase and SendGrid API keys
 const supabaseUrl = Deno.env.get('NEXT_PUBLIC_SUPABASE_URL')!;
 const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const sendgridApiKey = Deno.env.get('SENDGRID_API_KEY')!;  // Correct way to get env variable in Deno
+const sendgridApiKey = Deno.env.get('SENDGRID_API_KEY')!;
 
 // Initialize Supabase client
 const supabase = createClient(supabaseUrl, supabaseKey);
