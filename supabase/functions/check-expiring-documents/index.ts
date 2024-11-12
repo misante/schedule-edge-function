@@ -22,7 +22,6 @@ const sendReminder = (doc) => {
     text: `Your document "${doc.name}" is expiring on ${doc.expiration_date}. Please renew it.`,
     html: `<strong>Your document "${doc.name}" is expiring on ${doc.expiration_date}. Please renew it.</strong>`,
   };
-
   sgMail
     .send(msg)
     .then(() => {
@@ -52,7 +51,6 @@ serve(async () => {
     if (error) {
       return new Response(JSON.stringify({ error: error.message }), { status: 500 });
     }
-
     if (expiringDocuments && expiringDocuments.length > 0) {
       // Send reminders for each expiring document
       for (const doc of expiringDocuments) {
