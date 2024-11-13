@@ -20,6 +20,8 @@ import toast from "react-hot-toast";
 
 export default function DocumentsPage() {
   const [documents, setDocuments] = useState([]);
+  const [expiringDocuments, setExpiringDocuments] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -48,11 +50,11 @@ export default function DocumentsPage() {
     router.push("/create-document");
   };
   const sendEmail = async () => {
-    const message = { name: "Ashenafi EID", expiration_date: "10 Dec 2024" };
+    // const message = { name: "Ashenafi EID", expiration_date: "10 Dec 2024" };
     const resp = await fetch("/api/send-reminder", {
       method: "POST",
-      body: JSON.stringify(message),
-      headers: { "Content-Type": "application/json" },
+      // body: JSON.stringify(message),
+      // headers: { "Content-Type": "application/json" },
     });
     if (resp) {
       toast.success("email sent");
@@ -61,12 +63,14 @@ export default function DocumentsPage() {
 
   const retrieveExpiringDocuments = async () => {
     const resp = await fetch("/api/expiring-documents", {
-      method: "POST",
-      body: JSON.stringify(message),
-      headers: { "Content-Type": "application/json" },
+      method: "GET",
+      headers: { "Content-type": "Application/json" },
     });
     if (resp) {
-      toast.success("email sent");
+      const expiringDocs = await resp.json();
+      console.log(expiringDocs.expiringDocs);
+      setDocuments(expiringDocs.expiringDocs);
+      setExpiringDocuments(expiringDocs.expiringDocs);
     }
   };
   return (
@@ -74,7 +78,6 @@ export default function DocumentsPage() {
       <Typography variant="h4" gutterBottom>
         Document Management
       </Typography>
-
       <Button
         variant="contained"
         color="primary"
@@ -131,7 +134,7 @@ export default function DocumentsPage() {
       <Button
         variant="contained"
         color="primary"
-        onClick={retrieveExpiringDocuments}
+        onClick={() => retrieveExpiringDocuments()}
         sx={{ marginBottom: 2 }}
       >
         Expiring Documents
