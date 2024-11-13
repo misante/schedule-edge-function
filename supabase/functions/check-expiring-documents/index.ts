@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/x/sift/mod.ts";
+import { serve } from "https://deno.land/x/sift@0.6.0/mod.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import sgMail from "https://esm.sh/@sendgrid/mail@7";
 
