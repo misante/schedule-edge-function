@@ -19,5 +19,6 @@
   "[typescript]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
   },
-  "deno.enable": true
+  "deno.enable": true,
+  "deno.path": "C:/Users/ANTENEH/.deno/bin/deno.exe"
 }
