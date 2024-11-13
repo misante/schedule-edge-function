@@ -31,8 +31,13 @@ const sendReminder = (doc: any) => {
 
 // Serve the Edge Function
 serve({
-  "/check-expiring-documents": async () => {
+  "/check-expiring-documents": async (req) => {
     try {
+      // Only handle POST requests if needed
+      if (req.method !== "POST") {
+        return new Response("Method not allowed", { status: 405 });
+      }
+
       // Get current date and date after 7 days
       const today = new Date().toISOString().split("T")[0];
       const sevenDaysFromNow = new Date();
@@ -69,7 +74,7 @@ serve({
           { status: 200 },
         );
       }
-    } catch (error: any) {
+    } catch (error) {
       return new Response(
         JSON.stringify({ error: "An error occurred", details: error.message }),
         { status: 500 },
