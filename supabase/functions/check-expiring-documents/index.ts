@@ -1,29 +1,24 @@
 import { serve } from "https://deno.land/x/sift@0.6.0/mod.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import sgMail from "https://esm.sh/@sendgrid/mail@7";
-
-// Initialize Supabase and SendGrid API keys
+// Set up Supabase and SendGrid
 const supabaseUrl = Deno.env.get("NEXT_PUBLIC_SUPABASE_URL")!;
 const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY")!;
-
-// Initialize Supabase client
 const supabase = createClient(supabaseUrl, supabaseKey);
+sgMail.setApiKey(Deno.env.get("SENDGRID_API_KEY")!);
 
-// Initialize SendGrid
-sgMail.setApiKey(sendgridApiKey);
-
-// Send reminder email
-const sendReminder = (doc) => {
+// Helper function to send email reminders
+const sendReminder = (doc: any) => {
   const msg = {
-    to: "aspireonline22@gmail.com", // Recipient's email
-    from: "aspireonline22@gmail.com", // Your verified sender email
+    to: "aspireonline22@gmail.com",
+    from: "aspireonline22@gmail.com",
     subject: `Document "${doc.name}" is Expiring Soon`,
     text:
       `Your document "${doc.name}" is expiring on ${doc.expiration_date}. Please renew it.`,
     html:
       `<strong>Your document "${doc.name}" is expiring on ${doc.expiration_date}. Please renew it.</strong>`,
   };
+
   sgMail
     .send(msg)
     .then(() => {
@@ -35,50 +30,50 @@ const sendReminder = (doc) => {
 };
 
 // Serve the Edge Function
-serve(async () => {
-  try {
-    // Get current date and date after 7 days
-    const today = new Date().toISOString().split("T")[0];
-    const sevenDaysFromNow = new Date();
-    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
-    const nextWeek = sevenDaysFromNow.toISOString().split("T")[0];
+serve({
+  "/check-expiring-documents": async () => {
+    try {
+      // Get current date and date after 7 days
+      const today = new Date().toISOString().split("T")[0];
+      const sevenDaysFromNow = new Date();
+      sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+      const nextWeek = sevenDaysFromNow.toISOString().split("T")[0];
 
-    // Query documents that will expire within the next 7 days
-    const { data: expiringDocuments, error } = await supabase
-      .from("Documents")
-      .select("*")
-      .gte("expiration_date", today)
-      .lte("expiration_date", nextWeek);
+      // Query documents that will expire within the next 7 days
+      const { data: expiringDocuments, error } = await supabase
+        .from("Documents")
+        .select("*")
+        .gte("expiration_date", today)
+        .lte("expiration_date", nextWeek);
 
-    if (error) {
-      console.log(error.message);
-      return new Response(JSON.stringify({ error: error.message }), {
-        status: 500,
-      });
-    }
-    if (expiringDocuments && expiringDocuments.length > 0) {
-      // Send reminders for each expiring document
-      for (const doc of expiringDocuments) {
-        sendReminder(doc);
+      if (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+        });
       }
 
+      if (expiringDocuments.length > 0) {
+        // Send reminders for expiring documents
+        expiringDocuments.forEach((doc) => sendReminder(doc));
+
+        return new Response(
+          JSON.stringify({
+            message: `Found ${expiringDocuments.length} expiring documents`,
+            data: expiringDocuments,
+          }),
+          { status: 200 },
+        );
+      } else {
+        return new Response(
+          JSON.stringify({ message: "No expiring documents found" }),
+          { status: 200 },
+        );
+      }
+    } catch (error: any) {
       return new Response(
-        JSON.stringify({
-          message: `Found ${expiringDocuments.length} expiring documents`,
-          data: expiringDocuments,
-        }),
-        { status: 200 },
-      );
-    } else {
-      return new Response(
-        JSON.stringify({ message: "No expiring documents found" }),
-        { status: 200 },
+        JSON.stringify({ error: "An error occurred", details: error.message }),
+        { status: 500 },
       );
     }
-  } catch (error) {
-    console.error("Error in Edge Function:", error);
-    return new Response(JSON.stringify({ error: "An error occurred" }), {
-      status: 500,
-    });
-  }
+  },
 });
