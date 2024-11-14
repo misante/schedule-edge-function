@@ -74,7 +74,7 @@ serve({
           { status: 200 },
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       return new Response(
         JSON.stringify({ error: "An error occurred", details: error.message }),
         { status: 500 },
