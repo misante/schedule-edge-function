@@ -11,10 +11,10 @@ jobs:
     steps:
       - name: Print curl command for debugging
         run: |
-          echo "curl -X POST '${{ secrets.SUPABASE_URL }}/functions/v1/check-expiring-documents' -H 'Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}' -H 'Content-Type: application/json'"
+          echo "curl -X POST '${{ secrets.SUPABASE_URL }}/functions/v1/check-expiring-documents' -H 'Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}' -H 'Content-Type: application/json'"
 
       - name: Call Supabase Edge Function
         run: |
           curl -X POST "${{ secrets.SUPABASE_URL }}/functions/v1/check-expiring-documents" \
-          -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
           -H "Content-Type: application/json"
