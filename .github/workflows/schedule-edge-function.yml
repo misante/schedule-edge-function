@@ -13,3 +13,8 @@ jobs:
         run: |
           echo "Supabase URL: ${{ secrets.SUPABASE_URL }}"
           echo "Anon Key: ${{ secrets.SUPABASE_ANON_KEY }}"
+      - name: Call Supabase Edge Function
+        run: |
+          curl -X POST "${{ secrets.SUPABASE_URL }}/functions/v1/check-expiring-documents" \
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -H "Content-Type: application/json"
